@@ -1,24 +1,37 @@
-
-
 class App extends React.Component {
     state = {
-        name: 'Farhad',
-        age: 27
-    };
-
-    handleChangeString = (e) => {
-        this.setState({
-            name: 'Liza',
-            age: 0
-        })
+        usersInfo: [
+            { name: 'Farhad', age: 27, id: 1 },
+            { name: 'Ayten', age: 24, id: 2 },
+            { name: 'Liza', age: 0, id: 3 }
+        ]
     }
 
     render() {
-        return (
+        return(
+            <div className="family">
+                <Users usersInfo = { this.state.usersInfo } />
+            </div>
+        )
+    }
+}
+
+class Users extends React.Component {
+    render() {
+        const { usersInfo } = this.props;
+        const userList = usersInfo.map(user => {
+            return (
+                <div key={user.id}>
+                    <div>Name: { user.name }</div>
+                    <div>Age: {user.age }</div>
+                    <br/>
+                </div>
+            )
+        });
+
+        return(
             <div>
-                <h1>Hey, ninjas</h1>
-                <p> Hello! My name is { this.state.name } and I am { this.state.age } </p>
-                <button onClick={ this.handleChangeString }>Change!</button>
+                { userList }
             </div>
         )
     }
