@@ -16,25 +16,25 @@ class App extends React.Component {
     }
 }
 
-class Users extends React.Component {
-    render() {
-        const { usersInfo } = this.props;
-        const userList = usersInfo.map(user => {
-            return (
-                <div key={user.id}>
-                    <div>Name: { user.name }</div>
-                    <div>Age: {user.age }</div>
-                    <br/>
-                </div>
-            )
-        });
-
-        return(
-            <div>
-                { userList }
+function Users({usersInfo}) {
+    const usersList = usersInfo.map(user => {
+        if(user.age < 20) {
+            return null;
+        }
+        return (
+            <div key={user.id}>
+                <div>{ user.name }</div>
+                <div>{ user.age }</div>
+                <br/>
             </div>
         )
-    }
+    });
+
+    return (
+        <div>
+            { usersList }
+        </div>
+    )
 }
 
 ReactDOM.render(<App />, document.getElementById('app'));

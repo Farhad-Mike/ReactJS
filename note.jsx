@@ -97,7 +97,7 @@ class App extends React.Component {
     }
 }
 
-class User extends React.Component {
+class User extends React.Component {  // Использование Class вместо обычной функции называется Container component
     render() {
         return (
             <div>
@@ -149,4 +149,80 @@ class Users extends React.Component {
     }
 }
 
+// Использование UI component то есть если не нужно state то почему бы не использовать вместо Class обычную функцию
+class App extends React.Component {
+    state = {
+        usersInfo: [
+            { name: 'Farhad', age: 27, id: 1 },
+            { name: 'Ayten', age: 24, id: 2 },
+            { name: 'Liza', age: 0, id: 3 }
+        ]
+    }
 
+    render() {
+        return(
+            <div className="family">
+                <Users usersInfo = { this.state.usersInfo } />
+            </div>
+        )
+    }
+}
+
+function Users({usersInfo}) {
+    const usersList = usersInfo.map(user => {
+        return (
+            <div key={user.id}>
+                <div>{ user.name }</div>
+                <div>{ user.age }</div>
+                <br/>
+            </div>
+        )
+    });
+
+    return (
+        <div>
+            { usersList }
+        </div>
+    )
+}
+
+
+// Создания условия и в зависимости от условия рендеринг компонента
+class App extends React.Component {
+    state = {
+        usersInfo: [
+            { name: 'Farhad', age: 27, id: 1 },
+            { name: 'Ayten', age: 24, id: 2 },
+            { name: 'Liza', age: 0, id: 3 }
+        ]
+    }
+
+    render() {
+        return(
+            <div className="family">
+                <Users usersInfo = { this.state.usersInfo } />
+            </div>
+        )
+    }
+}
+
+function Users({usersInfo}) {
+    const usersList = usersInfo.map(user => {
+        if(user.age < 20) {
+            return null;
+        }
+        return (
+            <div key={user.id}>
+                <div>{ user.name }</div>
+                <div>{ user.age }</div>
+                <br/>
+            </div>
+        )
+    });
+
+    return (
+        <div>
+            { usersList }
+        </div>
+    )
+}
