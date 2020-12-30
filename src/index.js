@@ -1,40 +1,39 @@
 class App extends React.Component {
     state = {
-        usersInfo: [
-            { name: 'Farhad', age: 27, id: 1 },
-            { name: 'Ayten', age: 24, id: 2 },
-            { name: 'Liza', age: 0, id: 3 }
-        ]
+        name: null,
+        age: null,
+        hair: null
+    }
+
+    handleSubmit = (e) => {
+        e.preventDefault();
+        console.log(this.state);
+    }
+
+    handleChange = (e) => {
+        this.setState({
+            [e.target.id]: e.target.value
+        })
     }
 
     render() {
-        return(
-            <div className="family">
-                <Users usersInfo = { this.state.usersInfo } />
-            </div>
+        return (
+            <form onSubmit={ this.handleSubmit } onChange={ this.handleChange }>
+                <label htmlFor="name">Name: </label>
+                <input type="text" id='name' /> <br/> <br/>
+
+                <label htmlFor="age">Age: </label>
+                <input type="text" id='age' /> <br/> <br/>
+
+                <label htmlFor="hair">Hair: </label>
+                <input type="text" id='hair' /> <br/> <br/>
+
+                <button>Submit!</button>
+            </form>
         )
     }
 }
 
-function Users({usersInfo}) {
-    const usersList = usersInfo.map(user => {
-        if(user.age < 20) {
-            return null;
-        }
-        return (
-            <div key={user.id}>
-                <div>{ user.name }</div>
-                <div>{ user.age }</div>
-                <br/>
-            </div>
-        )
-    });
 
-    return (
-        <div>
-            { usersList }
-        </div>
-    )
-}
 
 ReactDOM.render(<App />, document.getElementById('app'));
