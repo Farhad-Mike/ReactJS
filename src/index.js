@@ -16,11 +16,21 @@ class App extends React.Component {
         })
     }
 
+    deleteUser = (id) => {
+        let users = this.state.users.filter(user => {
+            return user.id !== id;
+        });
+
+        this.setState({
+            users
+        })
+    }
+
 
     render() {
         return (
             <div>
-                <Users users={ this.state.users }/>
+                <Users deleteUser={ this.deleteUser } users={ this.state.users }/>
                 <AddUser addUser={ this.addUser } />
             </div>
         )
@@ -28,13 +38,14 @@ class App extends React.Component {
 }
 
 
-function Users(props) {
-    let users = props.users.map(user => {
+function Users({users, deleteUser}) {
+    let listUsers = users.map(user => {
         return (
             <div key={ user.id }>
                 <div>{ user.name }</div>
                 <div>{ user.age }</div>
                 <div>{ user.id }</div>
+                <button onClick={ () => {deleteUser(user.id)} }>Delete User</button>
                 <br/>
             </div>
         )
@@ -42,7 +53,7 @@ function Users(props) {
 
     return (
         <div>
-            {users}
+            {listUsers}
         </div>
     )
 }
