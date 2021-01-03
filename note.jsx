@@ -1,3 +1,6 @@
+// npx create-react-app myapp
+// npm install react-router-dom
+
 
 // Как правильно добавлять events на эелементы.
 class App extends React.Component {
@@ -482,13 +485,10 @@ class AddUser extends React.Component {
         return (
             <form onSubmit={ this.handleSubmit } onChange={ this.handleChange }>
                 <label htmlFor="name">Name: </label>
-                <input type="text" id='name' /> <br/> <br/>
+                <input type="text" id='name' value={ this.state.name }/> <br/> <br/>
 
                 <label htmlFor="age">Age: </label>
-                <input type="text" id='age' /> <br/> <br/>
-
-                <label htmlFor="hair">Hair: </label>
-                <input type="text" id='hair' /> <br/> <br/>
+                <input type="text" id='age' value={ this.state.age }/> <br/> <br/>
 
                 <button>Submit!</button>
             </form>
