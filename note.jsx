@@ -495,3 +495,20 @@ class AddUser extends React.Component {
         )
     }
 }
+
+
+// Как осуществлять multi landing страницы сайта
+class App extends React.Component {
+    render() {
+        return(
+            <BrowserRouter>
+                <div className="root">
+                    <Navbar />
+                    <Route exact path='/' component={ Home }/>
+                    <Route path='/about' component={ About }/>
+                    <Route path='/contact' component={ Contact }/>
+                </div>
+            </BrowserRouter>
+        )
+    }
+}
