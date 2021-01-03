@@ -449,3 +449,49 @@ class AddUser extends React.Component {
         )
     }
 }
+
+
+// Жизненные циклы компонентов
+class AddUser extends React.Component {
+    state = {
+        name: null,
+        age: null,
+        id: null
+    }
+
+    componentDidMount() { // Вызывает после самого первого монтирования компонента.
+        console.log('The component mounted');
+    }
+
+    componentDidUpdate(prevProps, prevState) { // Вызывает после кажлого обновления компонента. Содержит параметры предыдущих props и state
+        console.log('The component updated');
+    }
+
+    handleSubmit = (e) => {
+        e.preventDefault();
+        this.props.addUser(this.state)
+    }
+
+    handleChange = (e) => {
+        this.setState({
+            [e.target.id]: e.target.value
+        })
+    }
+
+    render() {
+        return (
+            <form onSubmit={ this.handleSubmit } onChange={ this.handleChange }>
+                <label htmlFor="name">Name: </label>
+                <input type="text" id='name' /> <br/> <br/>
+
+                <label htmlFor="age">Age: </label>
+                <input type="text" id='age' /> <br/> <br/>
+
+                <label htmlFor="hair">Hair: </label>
+                <input type="text" id='hair' /> <br/> <br/>
+
+                <button>Submit!</button>
+            </form>
+        )
+    }
+}

@@ -1,94 +1,96 @@
 class App extends React.Component {
-
     state = {
-        users: [
-            { name: 'Farhad', age: 27, id: 1 },
-            { name: 'Ayten', age: 24, id: 2 },
-            { name: 'Liza', age: 0, id: 3 }
+        todos: [
+            { id: 1, content: 'Learn HTML' },
+            { id: 2, content: 'Learn CSS' },
+            { id: 3, content: 'Learn JavaScript' }
         ]
     }
 
-    addUser = (user) => {
-        user.id = Math.random();
-        let users = [...this.state.users, user];
+    deleteTodo = (id) => {
+        let todos = this.state.todos.filter( todo => todo.id !== id );
+
         this.setState({
-            users: users
+            todos
         })
     }
 
-    deleteUser = (id) => {
-        let users = this.state.users.filter(user => {
-            return user.id !== id;
-        });
-
+    addTodo = (todo) => {
+        if(!todo.content) return;
+        
+        todo.id = Math.random();
         this.setState({
-            users
+            todos: [...this.state.todos, todo]
         })
     }
-
 
     render() {
         return (
-            <div>
-                <Users deleteUser={ this.deleteUser } users={ this.state.users }/>
-                <AddUser addUser={ this.addUser } />
+            <div className='todo-app container'>
+                <h1 className="center blue-text">Todo's</h1>
+                <Todos todos={ this.state.todos } deleteTodo={ this.deleteTodo }/>
+                <AddTodo addTodo={this.addTodo}/>
             </div>
         )
     }
 }
 
 
-function Users({users, deleteUser}) {
-    let listUsers = users.map(user => {
-        return (
-            <div key={ user.id }>
-                <div>{ user.name }</div>
-                <div>{ user.age }</div>
-                <div>{ user.id }</div>
-                <button onClick={ () => {deleteUser(user.id)} }>Delete User</button>
-                <br/>
-            </div>
-        )
-    })
+
+
+
+
+function Todos({ todos, deleteTodo }) {
+    let noTodos = (<p className='center'>You have no todos left</p>);
+    
+    let todosList = todos.length ? (
+        todos.map( todo => {
+            return (
+                <div className="collection-item" key={ todo.id }>
+                    <span onClick={ () => deleteTodo(todo.id) }>{ todo.content }</span>
+                </div>
+            )
+        })
+    ) : noTodos;
+        
 
     return (
-        <div>
-            {listUsers}
+        <div className="todos collection">
+            { todosList }
         </div>
     )
 }
 
-class AddUser extends React.Component {
-    state = {
-        name: null,
-        age: null,
-        id: null
-    }
 
-    handleSubmit = (e) => {
-        e.preventDefault();
-        this.props.addUser(this.state)
+
+
+
+
+class AddTodo extends React.Component {
+    state = {
+        content: ''
     }
 
     handleChange = (e) => {
         this.setState({
-            [e.target.id]: e.target.value
+            content: e.target.value
         })
     }
 
+    handleSubmit = (e) => {
+        e.preventDefault();
+        this.props.addTodo(this.state);
+        this.setState({
+            content: ''
+        })
+    }
+
+
     render() {
         return (
-            <form onSubmit={ this.handleSubmit } onChange={ this.handleChange }>
-                <label htmlFor="name">Name: </label>
-                <input type="text" id='name' /> <br/> <br/>
-
-                <label htmlFor="age">Age: </label>
-                <input type="text" id='age' /> <br/> <br/>
-
-                <label htmlFor="hair">Hair: </label>
-                <input type="text" id='hair' /> <br/> <br/>
-
-                <button>Submit!</button>
+            <form onSubmit={ this.handleSubmit }>
+                <label> Add new todo: </label>
+                <input type="text" onChange={ this.handleChange } value={ this.state.content }/>
             </form>
         )
     }
