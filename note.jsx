@@ -1,6 +1,6 @@
 // npx create-react-app myapp
 // npm install react-router-dom
-
+// npm install axios // Можно использовать вместо fetch запросов. Не обязательная библиотека
 
 // Как правильно добавлять events на эелементы.
 class App extends React.Component {
@@ -497,7 +497,8 @@ class AddUser extends React.Component {
 }
 
 
-// Как осуществлять multi landing страницы сайта
+// Как осуществлять multi landing страницы сайта с запросом на сервер
+import { BrowserRouter, Route } from 'react-router-dom';
 class App extends React.Component {
     render() {
         return(
@@ -509,6 +510,164 @@ class App extends React.Component {
                     <Route path='/contact' component={ Contact }/>
                 </div>
             </BrowserRouter>
+        )
+    }
+}
+
+function Navbar() {
+    return (
+        <nav className='nav-wrapper red darken-3'>
+            <div className="container">
+                <a href='/' className="brand-logo">BrowserRoute</a>
+                <ul className="right">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/about">About</a></li>
+                    <li><a href="/contact">Contact</a></li>
+                </ul>
+            </div>
+        </nav>
+    )
+}
+
+
+// Как осуществлять multi landing страницы сайта без запросов на сервер
+import { BrowserRouter, Route } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom'; // Использование <NavLink> вместо <Link> просто будет добавлять className='active' на выбранную (активную в данный момент) ссылку <a>
+class App extends React.Component {
+    render() {
+        return(
+            <BrowserRouter>
+                <div className="root">
+                    <Navbar />
+                    <Route exact path='/' component={ Home }/>
+                    <Route path='/about' component={ About }/>
+                    <Route path='/contact' component={ Contact }/>
+                </div>
+            </BrowserRouter>
+        )
+    }
+}
+
+function Navbar() {
+    return (
+        <nav className='nav-wrapper red darken-3'>
+            <div className="container">
+                <a href='/' className="brand-logo">BrowserRoute</a>
+                <ul className="right">
+                    <li><Link to="/">Home</Link></li>
+                    <li><Link to="/about">About</Link></li>
+                    <li><Link to="/contact">Contact</Link></li>
+                </ul>
+            </div>
+        </nav>
+    )
+}
+
+
+
+// Как осуществлять forwarding на другой линк
+import { BrowserRouter, Route } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom'; // Метод props.history.push(path, state); существует только <Route> тегов которые хранятся внутри <BrowserRouter> тега. Чтобы компонент <Navbar /> тоже мог использовать forwarding нужно его экспортировать как export default withRouter(Navbar);
+class App extends React.Component {
+    render() {
+        return(
+            <BrowserRouter>
+                <div className="root">
+                    <Navbar />
+                    <Route exact path='/' component={ Home }/>
+                    <Route path='/about' component={ About }/>
+                    <Route path='/contact' component={ Contact }/>
+                </div>
+            </BrowserRouter>
+        )
+    }
+}
+
+function Navbar(props) {
+    setTimeout(() => {
+        props.history.push('/contact')
+    }, 2000)
+    return (
+        <nav className='nav-wrapper red darken-3'>
+            <div className="container">
+                <a href='/' className="brand-logo">BrowserRoute</a>
+                <ul className="right">
+                    <li><Link to="/">Home</Link></li>
+                    <li><Link to="/about">About</Link></li>  
+                    <li><Link to="/contact">Contact</Link></li> 
+                </ul>
+            </div>
+        </nav>
+    )
+}
+
+export default withRouter(Navbar);
+
+
+// HOC (High Order Component) Компонент высокого порядка. Как правильно создавать компонент обертку.
+function Rainbow(WrappedComponent) {
+    const colours = ['red', 'blue', 'green', 'yellow'];
+    const randomColour = colours[Math.floor(Math.random() * 4)];
+    const className = `${randomColour}-text`;
+
+    return (props) => {
+        return (
+            <div className={className}>
+                <WrappedComponent { ...props } />
+            </div>
+        )
+    }
+}
+
+
+function Contact() {
+    return (
+        <div className="container">
+            <h4 className="center">Contact</h4>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ratione accusantium ipsam, quaerat perferendis eveniet fugiat autem sed, fugit, sequi illum voluptates vel iure! Ut repellat sunt expedita debitis possimus natus.</p>
+        </div>
+    )
+}
+
+export default Rainbow(Contact);
+
+
+// Fetch requests
+class Home extends React.Component {
+    state = {
+        posts: []
+    }
+
+    componentDidMount() {
+        fetch('https://jsonplaceholder.typicode.com/posts')
+            .then(res => res.json())
+            .then(posts => this.setState({
+                posts: posts.slice(0, 10)
+            }))
+    }
+
+    render() {
+        const { posts } = this.state;
+        const noPosts = <div className='center'>No posts yet</div>;
+        const postsList = posts.length ? (
+            posts.map(post => {
+                return (
+                    <div className="post card" key={ post.id }>
+                        <div className="card-content">
+                            <span className="card-title">{ post.title }</span>
+                            <p>{ post.body }</p>
+                        </div>
+                    </div>
+                )
+            })
+        ) : noPosts;
+
+
+        return (
+            <div className="container">
+                <h4 className="center">Home</h4>
+                { postsList }
+            </div>
         )
     }
 }
