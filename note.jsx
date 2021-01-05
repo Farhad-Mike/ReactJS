@@ -671,3 +671,171 @@ class Home extends React.Component {
         )
     }
 }
+
+
+// Route parameters #1 Меняет url в зависимости от содержимого
+class Post extends React.Component {
+    state = {
+        id: null
+    }
+
+    componentDidMount() {
+        const id = this.props.match.params.post_id;
+        this.setState({
+            id
+        })
+    }
+
+
+    render() {
+        return (
+            <div className='container'>
+                <h4>{ this.state.id }</h4>
+            </div>
+        )
+    }
+}
+
+class App extends React.Component {
+    render() {
+        return(
+            <BrowserRouter>
+                <div className="root">
+                    <Route path='/:post_id' component={ Post }/>
+                </div>
+            </BrowserRouter>
+        )
+    }
+}
+
+
+// Route parameters #2 Меняет url и контент
+// Я сделал /post/:post_id вместо /:post_id чтобы избежать бага, который будет рендерить страницу /:post_id даже при навигации по другому компоненту
+class App extends React.Component {
+    render() {
+        return(
+            <BrowserRouter>
+                <div className="root">
+                    <Navbar />
+                    <Route exact path='/' component={ Home }/>
+                    <Route path='/about' component={ About }/>
+                    <Route path='/contact' component={ Contact }/>
+                    <Route path='/post/:post_id' component={ Post }/> 
+                </div>
+            </BrowserRouter>
+        )
+    }
+}
+
+
+class Home extends React.Component {
+    state = {
+        posts: []
+    }
+
+    componentDidMount() {
+        fetch('https://jsonplaceholder.typicode.com/posts')
+            .then(res => res.json())
+            .then(posts => this.setState({
+                posts: posts.slice(0, 10)
+            }))
+    }
+
+    render() {
+        const { posts } = this.state;
+        const noPosts = <div className='center'>No posts yet</div>;
+        const postsList = posts.length ? (
+            posts.map(post => {
+                return (
+                    <div className="post card" key={ post.id }>
+                        <div className="card-content">
+                            <Link to={ `/post/${ post.id }`}>
+                                <span className="card-title">{ post.title }</span>
+                            </Link>
+                            <p>{ post.body }</p>
+                        </div>
+                    </div>
+                )
+            })
+        ) : noPosts;
+
+
+        return (
+            <div className="container">
+                <h4 className="center">Home</h4>
+                { postsList }
+            </div>
+        )
+    }
+}
+
+
+class Post extends React.Component {
+    state = {
+        post: null
+    }
+
+    componentDidMount() {
+        const id = this.props.match.params.post_id;
+        fetch('https://jsonplaceholder.typicode.com/posts/' + id)
+            .then(res => res.json())
+            .then(json => {
+                this.setState({
+                    post: json
+                })
+            })
+    }
+
+
+    render() {
+        const loadPost = <div className="center">Loading post...</div>
+        const post = this.state.post ? (
+            <div className="post">
+                <h4 className="center">{ this.state.post.title }</h4>
+                <p>{ this.state.post.body }</p>
+            </div>
+        ) : loadPost;
+
+        return (
+            <div className='container'>
+                { post }
+            </div>
+        )
+    }
+}
+
+
+// Route params #3. Если ты не хочешь нарушать структуризацию url то можно воспользоваться тегом <Switch> который как и команда Switch/case в JS будет проверять каждый path сверху до низу пока не найдет точное совпадение, и как первое совпадение будет найдено то сразу же выберет его
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+
+class App extends React.Component {
+    render() {
+        return(
+            <BrowserRouter>
+                <div className="root">
+                    <Navbar />
+                    <Switch>
+                        <Route exact path='/' component={ Home }/>
+                        <Route path='/about' component={ About }/>
+                        <Route path='/contact' component={ Contact }/>
+                        <Route path='/:post_id' component={ Post }/>
+                    </Switch>
+                </div>
+            </BrowserRouter>
+        )
+    }
+}
+
+
+// Как правильно добавлять IMG
+import ReactIMG from '../img/react.png';
+
+class App extends React.Component {
+    render() {
+        return (
+            <div>
+                <img src={ ReactIMG }/>
+            </div>
+        )
+    }
+}
